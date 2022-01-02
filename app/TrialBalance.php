@@ -10,7 +10,9 @@ class TrialBalance extends Model
     protected $fillable = [
         'register',
         'title',
-        'description'
+        'description',
+        'status',
+        'note'
     ];
 
     public function trial_balance_detail()

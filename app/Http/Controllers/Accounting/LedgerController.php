@@ -29,6 +29,16 @@ class LedgerController extends Controller
             $data = Ledger::latest()->get();
 
             return Datatables::of($data)
+                    ->editColumn('status', function($row) {
+                        if($row->status == 'pending'){
+                            $class = 'bg-warning';
+                        }else if($row->status == 'approved'){
+                            $class = 'bg-primary';
+                        }else{
+                            $class = 'bg-danger';
+                        }
+                        return '<span class="badge '.$class.'"> '. $row->status .'</span>';
+                    })
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
                         $btn='';
@@ -39,12 +49,12 @@ class LedgerController extends Controller
                             $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class="btn btn-md btn-danger my-1">Delete</a>';
                         }
                         if(Auth::user()->can('isManager')){
-                            $btn.= ' <button class="btn btn-md btn-primary btn-approve mr-1" data-id = "'. $row->id .'" onclick="approve('.$row->id.')">Terima'.$row->id.' </button>';
-                            $btn.= '<button class="btn btn-md btn-danger btn-reject">Tolak</button>';
+                            $btn.= ' <button class="btn btn-md btn-primary btn-approve mr-1" data-id = "'. $row->id .'" onclick="approve('.$row->id.')">Terima </button>';
+                            $btn.= '<button class="btn btn-md btn-danger btn-reject" onclick="rejected('.$row->id.')" >Tolak</button>';
                         }
                         return $btn;
                     })
-                    ->rawColumns(['details','action'])
+                    ->rawColumns(['details','action', 'status'])
                     ->make(true);
         }
     }
@@ -144,13 +154,21 @@ class LedgerController extends Controller
     {
         try {
             $ledger = Ledger::findOrFail($id);
-            if($request->status == 'approve'){
+            if($request->status == 'approved'){
                 $ledger->update([
                     'status' => $request->status
                 ]);
+                return 1;
+            }else{
+                $ledger->update([
+                    'status' => $request->status,
+                    'note' => $request->note
+                ]);
+                return 1;
             }
         } catch (\Throwable $th) {
-            dd($th);
+            // dd($th);
+            return 0;
         }
     }
 

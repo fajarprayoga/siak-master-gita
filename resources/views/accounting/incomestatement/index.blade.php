@@ -22,8 +22,10 @@
                             <th>No</th>
                             <th>@lang('global.incomestatement.register')</th>
                             <th>@lang('global.incomestatement.title')</th>
-                            {{-- <th>@lang('global.incomestatement.detail')</th> --}}
-                            <th width="100px">Action</th>
+                            <th>Status</th>
+                            <th>Note</th>
+                            {{-- <td>@lang('global.incomestatement.detail')</td> --}}
+                            <td widtd="100px">Action</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,12 +48,114 @@
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'register', name: 'register'},
                     {data: 'title', name: 'title'},
+                    {data: 'status', name: 'status'},
+                    {data: 'note', name: 'note'},
                     // {data : 'details', name : 'details'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
 
         });
+
+        function approve(id) {
+            $.confirm({
+                theme: 'material',
+                title: 'Warning!',
+                content: 'Apakah anda yakin ingin menerima pemesanan ini ?',
+                buttons: {
+                    Yes: function(){
+                    urlsnya = '{{ url("/accounting/incomestatement")}}/' + id,
+                    _token = $('input[name=_token]').val();
+                    $.ajax({
+                        type: 'PUT',
+                        dataType: 'json',
+                        data: {_token:_token, status:'approved'},
+                        url: urlsnya,
+                    })
+                    .done(function(response) {
+                        if(response == 1){
+                        toastr.success("Success")
+                        url = '{{ url("/accounting/incomestatement")}}';
+                        window.location.replace(url);
+                        }
+
+                    })
+                    .fail(function(){
+                        $.alert("error");
+                        return;
+                    })
+                    .always(function() {
+                        console.log("complete");
+                    });
+                    },
+                    No: function () {
+                    return;
+                    }
+                }
+            })
+        }
+
+        function rejected (id) {
+            $.confirm({
+                theme: 'material',
+                title: 'Isi Alasan',
+                content: '' +
+                        '<form action="" class="formName">' +
+                        '<div class="form-group">' +
+                        '<input class="form-control alasan" placeholder="Masukan Alasan" required>' +
+                        '</div>' +
+                        '</form>',
+                buttons: {
+                    Yes: {
+                    text:'Submit',
+                    btnClass: 'btn-primary',
+                    action: function(){
+                    var checkrequired = $('input').filter('[required]:visible')
+                    var isValid = true;
+                    $(checkrequired).each( function() {
+                            if ($(this).parsley().validate() !== true) isValid = false;
+                    });
+                    if(!isValid){
+                        $.alert('Mohon masukan alasan');
+                        return false;
+                    }
+                    else{
+                        urlsnya = '{{ url("/accounting/incomestatement")}}/' + id;
+                        var alasan = this.$content.find('.alasan').val();
+                        _token = $('input[name=_token]').val();
+                        $.ajax({
+                        type: 'PUT',
+                        dataType: 'json',
+                        data: {_token:_token, status:'rejected',note:alasan},
+                        url: urlsnya,
+                        })
+                        .done(function(response) {
+                        if(response == 1){
+                            toastr.success("Success")
+                            url = '{{ url("/accounting/incomestatement")}}';
+                            window.location.replace(url);
+                        }
+
+                        })
+                        .fail(function(){
+                        $.alert("error");
+                        return;
+                        })
+                        .always(function() {
+                            console.log("complete");
+                        });
+                    }
+                    }
+
+                    },
+
+                    No: function () {
+                    return;
+                    }
+                }
+            })
+        }
+
 
         // $('#delete').on( 'draw.dt', function () {
         //     alert( 'Table redrawn' );

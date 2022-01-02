@@ -18,6 +18,8 @@ class CreateTrialBalanceTable extends Migration
             $table->date('register');
             $table->string('title', 255);
             $table->text('description');
+            $table->enum('status', ['pending', 'rejected', 'approved'])->default('pending');
+            $table->text('note');
             $table->timestamps();
         });
     }

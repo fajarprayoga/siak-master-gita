@@ -22,52 +22,60 @@
                 <div class="menu-title">@lang('global.transaction.transaction')</div>
             </a>
         </li>
-        <li>
-            <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class="lni lni-database"></i></div>
-                <div class="menu-title">@lang('global.sidebar.master')</div>
-            </a>
-            <ul>
-                <li>
-                    <a href="{{ route('accounting.accounts.index') }}"><i class="bi bi-circle {{ request()->is('accounting/accounts/*') ? 'mm-active' : '' }}"></i>@lang('global.account.title')</a>
-                </li>
-                <li>
-                    <a href="{{ route('cashier.material.index') }}"><i class="bi bi-circle {{ request()->is('cahsier/material/*') ? 'mm-active' : '' }}"></i>@lang('global.material.title')</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="javascript:;" class="has-arrow">
-                <div class="parent-icon"><i class="lni lni-book"></i></div>
-                <div class="menu-title">Accounting</div>
-            </a>
-            <ul>
-                <li>
-                    <a href="{{ route('accounting.journal.index') }}">
-                        <i class="bi bi-circle {{ request()->is('accounting/journal/*') ? 'mm-active' : '' }}"></i>
-                        @lang('global.journal.journal')
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('accounting.ledger.index') }}">
-                        <i class="bi bi-circle {{ request()->is('accounting/ledger/*') ? 'mm-active' : '' }}"></i>
-                        @lang('global.ledger.ledger')
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('accounting.trialbalance.index') }}">
-                        <i class="bi bi-circle {{ request()->is('accounting/trialbalance/*') ? 'mm-active' : '' }}"></i>
-                        @lang('global.trialbalance.trialbalance')
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('accounting.incomestatement.index') }}">
-                        <i class="bi bi-circle {{ request()->is('accounting/incomestatement/*') ? 'mm-active' : '' }}"></i>
-                        @lang('global.incomestatement.incomestatement')
-                    </a>
-                </li>
-            </ul>
-        </li>
+        @if (!Auth::user()->can('isManager'))
+            <li>
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="lni lni-database"></i></div>
+                    <div class="menu-title">@lang('global.sidebar.master')</div>
+                </a>
+                <ul>
+                    @can('isAccounting')
+                        <li>
+                            <a href="{{ route('accounting.accounts.index') }}"><i class="bi bi-circle {{ request()->is('accounting/accounts/*') ? 'mm-active' : '' }}"></i>@lang('global.account.title')</a>
+                        </li>
+                    @endcan
+                    @can('isCashier')
+                        <li>
+                            <a href="{{ route('cashier.material.index') }}"><i class="bi bi-circle {{ request()->is('cahsier/material/*') ? 'mm-active' : '' }}"></i>@lang('global.material.title')</a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endif
+        @if (!Auth::user()->can('isCashier'))
+            <li>
+                <a href="javascript:;" class="has-arrow">
+                    <div class="parent-icon"><i class="lni lni-book"></i></div>
+                    <div class="menu-title">Accounting</div>
+                </a>
+                <ul>
+                    <li>
+                        <a href="{{ route('accounting.journal.index') }}">
+                            <i class="bi bi-circle {{ request()->is('accounting/journal/*') ? 'mm-active' : '' }}"></i>
+                            @lang('global.journal.journal')
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('accounting.ledger.index') }}">
+                            <i class="bi bi-circle {{ request()->is('accounting/ledger/*') ? 'mm-active' : '' }}"></i>
+                            @lang('global.ledger.ledger')
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('accounting.trialbalance.index') }}">
+                            <i class="bi bi-circle {{ request()->is('accounting/trialbalance/*') ? 'mm-active' : '' }}"></i>
+                            @lang('global.trialbalance.trialbalance')
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('accounting.incomestatement.index') }}">
+                            <i class="bi bi-circle {{ request()->is('accounting/incomestatement/*') ? 'mm-active' : '' }}"></i>
+                            @lang('global.incomestatement.incomestatement')
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        @endif
         <li>
             <a href="{{ route('admin.auth.logout') }}"  onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">

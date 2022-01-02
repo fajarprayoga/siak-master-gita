@@ -22,18 +22,33 @@ class IncomeStatementController extends Controller
             $data = Incomestatement::latest()->get();
 
             return Datatables::of($data)
+                    ->editColumn('status', function($row) {
+                        if($row->status == 'pending'){
+                            $class = 'bg-warning';
+                        }else if($row->status == 'approved'){
+                            $class = 'bg-primary';
+                        }else{
+                            $class = 'bg-danger';
+                        }
+                        return '<span class="badge '.$class.'"> '. $row->status .'</span>';
+                    })
                     ->addIndexColumn()
                     ->addColumn('action', function($row){
                         $btn='';
                         if(Auth::user()->can('isAccounting')){
                             // $btn = ' <a href="' .route('accounting.incomestatement.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
                             // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';
-                            $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
+                            $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-md my-1">Delete</a>';
                         }
-                        $btn .= ' <a href="' .route('accounting.incomestatement.report', $row->id). '" class=" btn btn-info btn-sm my-1">View</a>';
+                        $btn .= ' <a href="' .route('accounting.incomestatement.report', $row->id). '" class=" btn btn-info btn-md my-1">View</a>';
+                        if(Auth::user()->can('isManager')){
+                            $btn.= ' <button class="btn btn-md btn-primary btn-approve mr-1" data-id = "'. $row->id .'" onclick="approve('.$row->id.')">Terima </button>';
+                            $btn.= '<button class="btn btn-md btn-danger btn-reject" onclick="rejected('.$row->id.')" >Tolak</button>';
+                        }
                         return $btn;
                     })
-                    ->rawColumns(['details','action'])
+
+                    ->rawColumns(['details','action', 'status'])
                     ->make(true);
         }
 
@@ -142,7 +157,24 @@ class IncomeStatementController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $incomestatement = Incomestatement::findOrFail($id);
+            if($request->status == 'approved'){
+                $incomestatement->update([
+                    'status' => $request->status
+                ]);
+                return 1;
+            }else{
+                $incomestatement->update([
+                    'status' => $request->status,
+                    'note' => $request->note
+                ]);
+                return 1;
+            }
+        } catch (\Throwable $th) {
+            // dd($th);
+            return 0;
+        }
     }
 
     public function destroy(Incomestatement $incomestatement)

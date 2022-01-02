@@ -17,6 +17,8 @@ class CreateIncomestatementTable extends Migration
             $table->id();
             $table->date('register');
             $table->string('title');
+            $table->enum('status', ['pending', 'rejected', 'approved'])->default('pending');
+            $table->text('note');
             $table->timestamps();
         });
     }

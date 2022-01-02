@@ -147,7 +147,7 @@
                 .done(function(response) {
                   if(response == 1){
                     toastr.success("Success")
-                    url = "http://localhost:8000/pemesanan";
+                    url = '{ url("/accounting/ledger")}}';
                     window.location.replace(url);
                   }
 

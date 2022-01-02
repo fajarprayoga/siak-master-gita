@@ -10,6 +10,8 @@ class Incomestatement extends Model
     protected $fillable = [
         'register',
         'title',
+        'status',
+        'note'
     ];
 
     public function incomestatement_detail()

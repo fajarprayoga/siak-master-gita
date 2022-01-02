@@ -22,6 +22,8 @@
                             <td id="nomor" >No</td>
                             <td>Tanggal</td>
                             <td>Nama</td>
+                            <td>Status</td>
+                            <td>Note</td>
                             <td>Action</td>
                         </tr>
                     </thead>
@@ -49,6 +51,8 @@
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'register', name: 'register'},
                     {data: 'title', name: 'title'},
+                    {data: 'status', name: 'status'},
+                    {data: 'note', name: 'note'},
                     // {data : 'details', name : 'details'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
@@ -94,7 +98,68 @@
                     return;
                     }
                 }
-                })
+            })
+        }
+
+        function rejected (id) {
+            $.confirm({
+                theme: 'material',
+                title: 'Isi Alasan',
+                content: '' +
+                        '<form action="" class="formName">' +
+                        '<div class="form-group">' +
+                        '<input class="form-control alasan" placeholder="Masukan Alasan" required>' +
+                        '</div>' +
+                        '</form>',
+                buttons: {
+                    Yes: {
+                    text:'Submit',
+                    btnClass: 'btn-primary',
+                    action: function(){
+                    var checkrequired = $('input').filter('[required]:visible')
+                    var isValid = true;
+                    $(checkrequired).each( function() {
+                            if ($(this).parsley().validate() !== true) isValid = false;
+                    });
+                    if(!isValid){
+                        $.alert('Mohon masukan alasan');
+                        return false;
+                    }
+                    else{
+                        urlsnya = '{{ url("/accounting/ledger")}}/' + id;
+                        var alasan = this.$content.find('.alasan').val();
+                        _token = $('input[name=_token]').val();
+                        $.ajax({
+                        type: 'PUT',
+                        dataType: 'json',
+                        data: {_token:_token, status:'rejected',note:alasan},
+                        url: urlsnya,
+                        })
+                        .done(function(response) {
+                        if(response == 1){
+                            toastr.success("Success")
+                            url = '{{ url("/accounting/ledger")}}';
+                            window.location.replace(url);
+                        }
+
+                        })
+                        .fail(function(){
+                        $.alert("error");
+                        return;
+                        })
+                        .always(function() {
+                            console.log("complete");
+                        });
+                    }
+                    }
+
+                    },
+
+                    No: function () {
+                    return;
+                    }
+                }
+            })
         }
 
 
