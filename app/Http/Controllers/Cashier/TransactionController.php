@@ -22,7 +22,7 @@ class TransactionController extends Controller
         if ($request->ajax()) {
             // $data = Journal::latest()->get();
             $daten = date('Y-m-d', strtotime($request->date));
-            $data = Transaction::where('created_at', '2021-12-27')->where([['expense', '<=', 0], ['price_material', '!=', null]])->orWhere('expense', null)->orderBy('id', 'DESC')->with(['material', 'gosek'])->get();
+            $data = Transaction::where('created_at', $daten)->where([['expense', '<=', 0], ['price_material', '!=', null]])->orWhere('expense', null)->orderBy('id', 'DESC')->with(['material', 'gosek'])->get();
             return Datatables::of($data)
                     ->editColumn('material_id', function ($row) {
                         return $row->material ? $row->material->name : "";

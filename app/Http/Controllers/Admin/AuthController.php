@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
 class AuthController extends Controller
 {
     public function index()
@@ -21,7 +23,6 @@ class AuthController extends Controller
             'name'=>'required',
             'password'=>'required'
         ]);
-
         try {
             $user = User::where('name', $request->name)->first();
             $password = Hash::make($request->password);
@@ -31,12 +32,15 @@ class AuthController extends Controller
                     // Authentication passed...
                     return redirect()->intended('/admin');
                 }else{
+                    Session::flash('password_wrong','Your Email or Password is Incorrect, Please Try Again!');
                     return redirect()->back();
                 }
             }else{
+                Session::flash('password_wrong','Your Email or Password is Incorrect, Please Try Again!');
                 return redirect()->back();
             }
         } catch (\Throwable $th) {
+            Session::flash('password_wrong','Your Email or Password is Incorrect, Please Try Again!');
             return redirect()->back();
         }
     }

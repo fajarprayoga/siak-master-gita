@@ -18,7 +18,7 @@
 
   <!--start wrapper-->
     <div class="wrapper">
-    
+
        <!--start content-->
         <main class="authentication-content">
             <div class="container-fluid">
@@ -32,6 +32,12 @@
                                 <div class="card-body p-4 p-sm-5">
                                     <h5 class="card-title">Sign In</h5>
                                     <p class="card-text mb-5">Silahkan Login untuk dapatkan Akses   </p>
+                                    @if ($password_wrong = Session::get('password_wrong'))
+                                        <div class="alert alert-danger alert-block">
+                                            <button type="button" class="close" data-dismiss="alert">×</button>
+                                            <strong>{{ $password_wrong }}</strong>
+                                        </div>
+                                    @endif
                                     <form class="form-body" action="{{ route('admin.auth.login') }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <div class="row g-3">
@@ -63,7 +69,7 @@
                 </div>
             </div>
         </main>
-        
+
        <!--end page main-->
 
     </div>
