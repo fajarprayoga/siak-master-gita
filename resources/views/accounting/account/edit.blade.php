@@ -18,6 +18,14 @@
                             <label for="name" class="form-label">@lang('global.account.name')</label>
                             <input class="form-control" type="text" id="name" name="name" required value="{{ old('name', isset($account) ? $account->name : '') }}">
                         </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">@lang('global.account.normal_balance')</label>
+                            <select class="form-control" name="normal_balance" id="normal_balance">
+                                <option value=""></option>
+                                <option value="debit" {{$account->normal_balance == 'debit' ? 'selected' : ''}}>Debit</option>
+                                <option value="credit" {{$account->normal_balance == 'credit' ? 'selected' : ''}}>Kredit</option>
+                            </select>
+                        </div>
                         <div>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>

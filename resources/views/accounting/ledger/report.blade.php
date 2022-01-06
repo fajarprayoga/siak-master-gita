@@ -54,6 +54,7 @@
                             <?php $total_debet = 0; ?>
                             @foreach ($account as $item)
                                 @if ($item->types == 'debit')
+                                    <?php $type ='debit' ?>
                                     <?php $total_debet += $item->amount; ?>
                                 @endif
                             @endforeach
@@ -64,6 +65,7 @@
                             <?php $total_credit = 0; ?>
                             @foreach ($account as $item)
                                 @if ($item->types == 'credit')
+                                <?php $type ='credit' ?>
                                     <?php $total_credit += $item->amount; ?>
                                 @endif
                             @endforeach
@@ -73,7 +75,14 @@
                     </tr>
                     <tr>
                         <td colspan="3" class="text-center" style="font-weight: bold; font-size:15px">TOTAL</td>
-                        <td colspan="2"  class="text-center" style="font-weight: bold; font-size:15px">{{Rupiah($total_debet - $total_credit)}}</td>
+                        <?php
+                            if ($type == 'debit') {
+                                $total_all = $total_debet - $total_credit;
+                            }else{
+                                $total_all = $total_credit-$total_debet ;
+                            }
+                        ?>
+                        <td colspan="2"  class="text-center" style="font-weight: bold; font-size:15px">{{Rupiah($total_all)}}</td>
                     </tr>
             </tbody>
         </table>

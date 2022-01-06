@@ -88,7 +88,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="expense" class="form-label">@lang('global.transaction.solar')</label>
-                                    <input class="form-control" value="{{isset($expenses[8]) ? $expenses[8]->expense : 0}}" type="number" min="0" placeholder="0" id="expense" name="expense[]" required >
+                                    <input class="form-control" value="{{isset($expenses[7]) ? $expenses[7]->expense : 0}}" type="number" min="0" placeholder="0" id="expense" name="expense[]" required >
                                 </div>
                             </div>
                         </div>

@@ -24,11 +24,11 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="hidden" name="date" value="{{$date ? $date : date('d-m-Y')}}">
+                                {{-- <input type="hidden" name="date" value="{{$date ? $date : date('d-m-Y')}}"> --}}
                                 <div class="mb-3">
                                     <label for="date" class="form-label">@lang('global.transaction.date')</label>
                                     {{-- <input class="form-control " data-date-format="DD MMMM YYYY" type="text" id="register" name="register" required > --}}
-                                    <input class="result form-control" type="text" disabled id="date" value="{{$date ? $date : date('d-m-Y')}}" name="created_at" required>
+                                    <input class="result form-control" type="text"  id="date" value="{{$date ? $date : date('d-m-Y')}}" name="date" required>
                                 </div>
                             </div>
                             <div class="col-md-6">

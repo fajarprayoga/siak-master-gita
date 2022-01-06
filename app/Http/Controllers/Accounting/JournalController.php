@@ -95,8 +95,8 @@ class JournalController extends Controller
             return redirect()->back()->with('success', 'Success');
         } catch (\Throwable $th) {
             DB::rollBack();
-            // dd($th);
-            return redirect()->back();
+            dd($th);
+            // return redirect()->back();
         }
         // echo date('Y-m-d'. strtotime($request->register));
         // dd(date('Y-m-d'. strtotime($request->register)));
@@ -118,20 +118,25 @@ class JournalController extends Controller
     {
         if(Auth::user()->can('isAccounting')){
             // dd($request->status);
+
            try {
                 if($request->status == 'approved'){
-                    $journal->update([
-                        'status' => $request->status
-                    ]);
+                    // $journal->update([
+                    //     'status' => $request->status
+                    // ]);
+                    $journal->status  =  $request->status;
                     return 1;
                 }else{
-                    $journal->update([
-                        'status' => $request->status,
-                        'note' => $request->note
-                    ]);
+                    // $journal->update([
+                    //     'status' => $request->status,
+                    //     'note' => $request->note
+                    // ]);
+                    $journal->status  =  $request->status;
+                    $journal->note = $request->note;
                     return 1;
                 }
            } catch (\Throwable $th) {
+               dd($th);
                return 0;
            }
 

@@ -71,7 +71,7 @@ class IncomeStatementController extends Controller
     {
         DB::beginTransaction();
         try {
-            $trial_balance =  $pengeluaran = TrialBalanceDetail::where('trial_balance_id', $request->trial_balance_id)
+            $trial_balance = TrialBalanceDetail::where('trial_balance_id', $request->trial_balance_id)
                 ->join('accounts', function($join) {
                     $join->on('trial_balance_detail.account_id', '=', 'accounts.id')
                     ->where('accounts.code', '>', 4000);
@@ -84,7 +84,7 @@ class IncomeStatementController extends Controller
                 'title' => $request->title,
                 'register' => $date
             ]);
-            $pengeluaran = DB::table('trial_balance_detail')
+            $pendapatan = DB::table('trial_balance_detail')
                 ->where('trial_balance_id', $request->trial_balance_id)
                 ->join('accounts', function($join) {
                     $join->on('trial_balance_detail.account_id', '=', 'accounts.id')
@@ -101,18 +101,18 @@ class IncomeStatementController extends Controller
                     'expense' => $value->amount,
                     'account_id' =>$value->account_id,
                     'amount' => 0,
-                    'type' => 'income'
+                    'type' => 'expense'
                 ];
             }
 
             // pendapatan
             $income_table_detail[]= [
-                'incomestatement_id' => $income_table->id,
-                'name' => $pengeluaran->name,
-                'amount' => $pengeluaran->amount,
-                'account_id' =>$pengeluaran->account_id,
+                'incomestatement_id' => $pendapatan->id,
+                'name' => $pendapatan->name,
+                'amount' => $pendapatan->amount,
+                'account_id' =>$pendapatan->account_id,
                 'expense' => 0,
-                'type' => 'expense'
+                'type' => 'income'
             ];
             $pendapatan = [
                 "Potongan Penjualan Pasir Super",

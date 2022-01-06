@@ -105,7 +105,7 @@
                             swal("Delete Success", {
                                 icon: "success",
                             });
-                            // $('.data-table').DataTable().ajax.reload();
+                            $('.data-table').DataTable().ajax.reload();
                         },
                         error: function(err) {
                             console.log(err);

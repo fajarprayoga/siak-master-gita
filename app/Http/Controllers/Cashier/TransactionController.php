@@ -90,6 +90,7 @@ class TransactionController extends Controller
 
         try {
 
+            // dd($request->date);
 
             $data = array(
                 'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
@@ -389,7 +390,7 @@ class TransactionController extends Controller
                 $pemilik = Transaction::where('created_at',date('Y-m-d', strtotime($date)))->where('vehicle_number', 'pemilik' )
                                 ->update(['expense' => $sum]);
 
-                dd($pemilik);
+                // dd($pemilik);
             }
             DB::commit();
         } catch (\Throwable $th) {
@@ -405,8 +406,11 @@ class TransactionController extends Controller
         // dd($request->all());
         $date = date('Y-m-d', strtotime($request->date));
         $transactions = Transaction::where('created_at', $date)->where([['expense', '<=', 0], ['price_material', '!=', null]])->get();
-        $transactions_expense = Transaction::where('created_at', $date)->where('price_material', '0')->orWhere('price_material', '=', null)->get();
-
+        $transactions_expense = Transaction::where('created_at', $date)->where(function ($query){
+            $query->where('price_material', '0');
+            $query->orWhere('price_material', '=', null);
+        })->get();
+        // dd($transactions_expense);
 
         $t_gosek = Gosek::where('created_at', date('Y-m-d', strtotime($request->date)))->get();
         $t_gosek = json_decode($t_gosek, true);

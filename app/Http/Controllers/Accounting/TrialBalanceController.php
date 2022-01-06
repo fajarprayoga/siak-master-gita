@@ -94,7 +94,7 @@ class TrialBalanceController extends Controller
                 ];
             }
 
-            $account = Account::all();
+            $account = Account::latest()->get();
 
             foreach ($account as $key => $value) {
                 $trial_balance_detail[$key] = [
