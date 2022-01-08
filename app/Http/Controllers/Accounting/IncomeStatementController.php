@@ -125,7 +125,7 @@ class IncomeStatementController extends Controller
                 $income_table_detail[]= [
                     'incomestatement_id' => $income_table->id,
                     'name' => $value,
-                    'amount' => $request->amount[$index],
+                    'amount' => $request->amount[$index] ?  str_replace(".","",  $request->amount[$index])  : 0,
                     'account_id' => null,
                     'expense' => 0,
                     'type' => 'income',
@@ -192,9 +192,11 @@ class IncomeStatementController extends Controller
     {
 
         $total = Incomestatement::selectRaw('sum(incomestatement_detail.amount) as amount_total, sum(incomestatement_detail.expense) as expense_total')
+        ->where('incomestatement.id', $id)
         ->join('incomestatement_detail', 'incomestatement.id', '=', 'incomestatement_detail.incomestatement_id')
         ->first();
 
+        // dd($total);
         $incomestatement = Incomestatement::findOrFail($id);
 
         $pdf = PDF::loadview('accounting.incomestatement.report', ['incomestatement' => $incomestatement, 'total' => $total ]);

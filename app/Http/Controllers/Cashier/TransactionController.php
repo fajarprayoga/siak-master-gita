@@ -98,7 +98,7 @@ class TransactionController extends Controller
                 'vehicle' => $request->vehicle,
                 'type_material' => $request->type_material,
                 'material_id' => $request->material_id,
-                'price_material' => $request->price_material,
+                'price_material' => $request->price_material ? str_replace(".","",  $request->price_material)  : 0,
                 'nomor' => $request->nomor
             );
 
@@ -107,7 +107,7 @@ class TransactionController extends Controller
             if($request->gosek != null || $request->gosek != ''){
                 $expense = array(
                     'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
-                    'expense' => $request->gosek,
+                    'expense' =>  $request->gosek  ? str_replace(".","",  $request->gosek)  : 0,
                     'transaction_id' => $transaction->id
                 );
                   // create gosek

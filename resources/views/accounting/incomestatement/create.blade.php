@@ -28,19 +28,19 @@
                         </div>
                         <div class="mb-3">
                             <label for="piece_sand_super" class="form-label">@lang('global.incomestatement.piece_sand_super')</label>
-                            <input class="form-control" type="number" id="piece_sand_super" name="amount[]" >
+                            <input class="form-control price" type="text" id="piece_sand_super" name="amount[]" >
                         </div>
                         <div class="mb-3">
                             <label for="piece_sand" class="form-label">@lang('global.incomestatement.piece_sand')</label>
-                            <input class="form-control" type="number" id="piece_sand" name="amount[]" >
+                            <input class="form-control price" type="text" id="piece_sand" name="amount[]" >
                         </div>
                         <div class="mb-3">
                             <label for="piece_stone" class="form-label">@lang('global.incomestatement.piece_stone')</label>
-                            <input class="form-control" type="number" id="piece_stone" name="amount[]" >
+                            <input class="form-control price" type="text" id="piece_stone" name="amount[]" >
                         </div>
                         <div class="mb-3">
                             <label for="sale_freight_price" class="form-label">@lang('global.incomestatement.sale_freight_price')</label>
-                            <input class="form-control" type="number" id="sale_freight_price" name="amount[]" >
+                            <input class="form-control price" type="text" id="sale_freight_price" name="amount[]" >
                         </div>
                         <button class="btn btn-primary" type="submit">Tambah</button>
                    </form>
@@ -60,6 +60,26 @@
                 monthPicker:true,
                 year:true
             });
+
+
+            $(document).on('keyup','.price',function(){
+                // getTotal();
+                // alert('jalo')
+                formatRp()
+            });
+
+
+            function formatRp () {
+                var amount = $(".price").map(function(index, value){
+                    var rupiah = parseInt($(value).val() == ''? 0:$(value).val().split('.').join(""))
+                     $(value).val(function(index, item) {
+                        return item
+                        .replace(/\D/g, "")
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                        ;
+                    });
+                });
+            }
         // });
     </script>
 @endsection
