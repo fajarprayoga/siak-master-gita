@@ -114,9 +114,10 @@ class JournalController extends Controller
         return view('accounting.journal.edit', compact('journal', 'accounts'));
     }
 
-    public function update(Request $request, Journal $journal)
+    public function update(Request $request, $id)
     {
-        if(Auth::user()->can('isAccounting')){
+        $journal = Journal::findOrFail($id);
+        if(Auth::user()->can('isManager')){
             // dd($request->status);
 
            try {
@@ -124,17 +125,27 @@ class JournalController extends Controller
                     // $journal->update([
                     //     'status' => $request->status
                     // ]);
-                    $journal->status  =  $request->status;
+                    // $journal->status  =  $request->status;
+                    $journal->update([
+                        'status' => $request->status,
+                        'note' => ''
+                    ]);
                     return 1;
                 }else{
                     // $journal->update([
                     //     'status' => $request->status,
                     //     'note' => $request->note
                     // ]);
-                    $journal->status  =  $request->status;
-                    $journal->note = $request->note;
+                    // $journal->status  =  $request->status;
+                    // $journal->note = $request->note;
+                    $journal->update([
+                        'status' => $request->status,
+                        'note' => $request->note
+                    ]);
                     return 1;
+                    // dd($request->all());
                 }
+
            } catch (\Throwable $th) {
                dd($th);
                return 0;

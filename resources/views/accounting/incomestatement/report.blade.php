@@ -62,8 +62,17 @@
                 <td class="text-center" style="font-weight: bold"> {{Rupiah($total->expense_total)}} </td>
                 <td style="width: 3px; font-size: 10px; font-weight: bold">-</td>
             </tr>
+            <?php
+                if($total->amount_total > $total->expense_total){
+                    $text = 'LABA';
+                }else if($total->amount_total < $total->expense_total){
+                    $text ="RUGI";
+                }else{
+                    $text = '';
+                }
+            ?>
             <tr>
-                <td class="text-center " style="font-weight: bold; font-size: 15px">RUGI</td>
+                <td class="text-center " style="font-weight: bold; font-size: 15px">{{$text}} </td>
                 <td></td>
                 <td class="text-center" style="font-weight: bold"> {{Rupiah($total->amount_total - $total->expense_total)}} </td>
                 <td style="width: 3px"></td>

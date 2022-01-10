@@ -57,7 +57,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="price_material" class="form-label">@lang('global.transaction.price_material')</label>
-                                    <input class="form-control" type="text" id="price_material" name="price_material" value="{{$transaction->price_material}}" required >
+                                    <input class="form-control price" type="text" id="price_material" name="price_material" value="{{$transaction->price_material}}" required >
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -69,7 +69,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="gosek" class="form-label">@lang('global.transaction.gosek')</label>
-                                    <input class="form-control" type="text" id="gosek" name="gosek" value="{{$transaction->gosek ? $transaction->gosek->expense : ''}}"  >
+                                    <input class="form-control price" type="text" id="gosek" name="gosek" value="{{$transaction->gosek ? $transaction->gosek->expense : ''}}"  >
                                 </div>
                             </div>
                         </div>
@@ -94,5 +94,27 @@
             format : 'DD-MM-YYYY',
             time:false,
         });
+
+        $(document).ready(function(){
+            // alert('ja;')
+            formatRp();
+        })
+
+        $(document).on('keyup','.price',function(){
+            formatRp()
+        });
+
+
+        function formatRp () {
+            var amount = $(".price").map(function(index, value){
+                var rupiah = parseInt($(value).val() == ''? 0:$(value).val().split('.').join(""))
+                    $(value).val(function(index, item) {
+                    return item
+                    .replace(/\D/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+                });
+            });
+        }
     </script>
 @endsection

@@ -50,7 +50,7 @@
                          <td class="description">{{$value->account->name}}</td>
                         <td class="ref"> </td>
                         <td class="types">{{$value->account->normal_balance == 'debit' ? Rupiah($value->amount) : ''}}</td>
-                        <td class="types">{{$value->account->normal_balance == 'credit' ? Rupiah($value->amount) : ''}}</td>
+                        <td class="types">{{$value->account->normal_balance == 'credit' ? Rupiah(str_replace("-","",  $value->amount)) : ''}}</td>
                     </tr>
                 @endforeach
                 <tr>
@@ -59,7 +59,7 @@
                         {{Rupiah($sum_debit)}}
                     </td>
                     <td class="text-center" style="font-weight: bold; font-size:15px">
-                        {{Rupiah($sum_credit)}}
+                        {{Rupiah(str_replace("-","",  $sum_credit))}}
                     </td>
                 </tr>
         </tbody>

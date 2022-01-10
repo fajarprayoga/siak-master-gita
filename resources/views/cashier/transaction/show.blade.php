@@ -12,8 +12,8 @@
                         <input type="hidden" name="date" value="{{$date}}">
                         <button type="submit" class="text-white btn btn-primary ">@lang('global.app.add')</button>
                     </form>
+                    <a href="{{ route('cashier.transaction.expense', $date) }}" class="text-white btn btn-danger  mx-2">@lang('global.transaction.expense')</a>
                 @endcan
-                <a href="{{ route('cashier.transaction.expense', $date) }}" class="text-white btn btn-danger  mx-2">@lang('global.transaction.expense')</a>
                 <form action="{{route('cashier.transaction.report')}}" target="_blank" method="GET">
                     {{-- @csrf --}}
                     <input type="hidden" name="date" value="{{$date}}">

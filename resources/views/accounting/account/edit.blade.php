@@ -21,7 +21,7 @@
                         <div class="mb-3">
                             <label for="name" class="form-label">@lang('global.account.normal_balance')</label>
                             <select class="form-control" name="normal_balance" id="normal_balance">
-                                <option value=""></option>
+                                {{-- <option value=""></option> --}}
                                 <option value="debit" {{$account->normal_balance == 'debit' ? 'selected' : ''}}>Debit</option>
                                 <option value="credit" {{$account->normal_balance == 'credit' ? 'selected' : ''}}>Kredit</option>
                             </select>

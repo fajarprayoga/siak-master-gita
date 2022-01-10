@@ -107,7 +107,7 @@ class TrialBalanceController extends Controller
             $trial_balance->trial_balance_detail()->createMany($trial_balance_detail);
 
             DB::commit();
-            return redirect()->back()->with('success', 'Success');
+            return redirect()->route('accounting.trialbalance.index')->with('success', 'Success');
 
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -173,9 +173,7 @@ class TrialBalanceController extends Controller
             $query->orderBy('date', 'ASC');
         }])->first();
 
-        // $trial_balanceDetail = trial_balanceDetail::where('trial_balance_id', $trial_balance->id)->with('account')->get();
-        // $accountId = $trial_balanceDetail->groupBy('account_id');
-        // dd($trial_balance->trial_balance_detail);
+
         $pdf = PDF::loadview('accounting.trialbalance.report', ['trial_balance' => $trial_balance]);
         return $pdf->stream();
     }

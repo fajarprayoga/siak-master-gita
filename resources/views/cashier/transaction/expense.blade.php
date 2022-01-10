@@ -38,35 +38,35 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="expense" class="form-label">@lang('global.transaction.operator')</label>
-                                    <input class="form-control" type="number" min="0" value="{{isset($expenses[0]) ? $expenses[0]->expense : 0}}" placeholder="0" id="expense" name="expense[]" required >
+                                    <input class="form-control price" type="number" min="0" value="{{isset($expenses[0]) ? $expenses[0]->expense : 0}}" placeholder="0" id="expense" name="expense[]" required >
                                 </div>
                             </div>
                             {{-- kasir --}}
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="expense" class="form-label">@lang('global.transaction.cashier')</label>
-                                    <input class="form-control" value="{{isset($expenses[1]) ? $expenses[1]->expense : 0}}" min="0" placeholder="0" id="expense" name="expense[]" required >
+                                    <input class="form-control price" value="{{isset($expenses[1]) ? $expenses[1]->expense : 0}}" min="0" placeholder="0" id="expense" name="expense[]" required >
                                 </div>
                             </div>
                               {{-- helper --}}
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="expense" class="form-label">@lang('global.transaction.helper')</label>
-                                    <input class="form-control" type="number" min="0" value="{{isset($expenses[2]) ? $expenses[2]->expense : 0}}" placeholder="0" id="expense" name="expense[]" required >
+                                    <input class="form-control price" type="text" min="0" value="{{isset($expenses[2]) ? $expenses[2]->expense : 0}}" placeholder="0" id="expense" name="expense[]" required >
                                 </div>
                             </div>
                               {{-- road --}}
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="expense" class="form-label">@lang('global.transaction.road')</label>
-                                    <input class="form-control" type="number" min="0" value="{{isset($expenses[3]) ? $expenses[3]->expense : 0}}" placeholder="0" id="expense" name="expense[]" required >
+                                    <input class="form-control price" type="text" min="0" value="{{isset($expenses[3]) ? $expenses[3]->expense : 0}}" placeholder="0" id="expense" name="expense[]" required >
                                 </div>
                             </div>
                               {{-- pemilk --}}
                             {{-- <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="expense" class="form-label">@lang('global.transaction.owner')</label>
-                                    <input class="form-control" type="number" min="0" value="{{isset($expenses[5]) ? $expenses[5]->expense : 0}}" placeholder="0" id="expense" name="expense[]" required >
+                                    <input class="form-control price" type="text" min="0" value="{{isset($expenses[5]) ? $expenses[5]->expense : 0}}" placeholder="0" id="expense" name="expense[]" required >
                                 </div>
                             </div> --}}
                             <input type="hidden" name="expense[]" value="0" >
@@ -74,21 +74,21 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="expense" class="form-label">@lang('global.transaction.road_city')</label>
-                                    <input class="form-control" type="number" min="0" value="{{isset($expenses[5]) ? $expenses[5]->expense : 0}}" placeholder="0" id="expense" name="expense[]" required >
+                                    <input class="form-control price" type="text" min="0" value="{{isset($expenses[5]) ? $expenses[5]->expense : 0}}" placeholder="0" id="expense" name="expense[]" required >
                                 </div>
                             </div>
                             {{-- other --}}
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="expense" class="form-label">@lang('global.transaction.other')</label>
-                                    <input class="form-control" type="number" min="0" value="{{isset($expenses[6]) ? $expenses[6]->expense : 0}}" placeholder="0" id="expense" name="expense[]" required >
+                                    <input class="form-control price" type="text" min="0" value="{{isset($expenses[6]) ? $expenses[6]->expense : 0}}" placeholder="0" id="expense" name="expense[]" required >
                                 </div>
                             </div>
                             {{-- solar --}}
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="expense" class="form-label">@lang('global.transaction.solar')</label>
-                                    <input class="form-control" value="{{isset($expenses[7]) ? $expenses[7]->expense : 0}}" type="number" min="0" placeholder="0" id="expense" name="expense[]" required >
+                                    <input class="form-control price" value="{{isset($expenses[7]) ? $expenses[7]->expense : 0}}" type="text" min="0" placeholder="0" id="expense" name="expense[]" required >
                                 </div>
                             </div>
                         </div>
@@ -115,5 +115,26 @@
             format : 'DD-MM-YYYY',
             time:false,
         });
+        $(document).ready(function(){
+            // alert('ja;')
+            formatRp();
+        })
+
+        $(document).on('keyup','.price',function(){
+            formatRp()
+        });
+
+
+        function formatRp () {
+            var amount = $(".price").map(function(index, value){
+                var rupiah = parseInt($(value).val() == ''? 0:$(value).val().split('.').join(""))
+                    $(value).val(function(index, item) {
+                    return item
+                    .replace(/\D/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                    ;
+                });
+            });
+        }
     </script>
 @endsection

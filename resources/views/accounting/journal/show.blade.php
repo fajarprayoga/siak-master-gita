@@ -147,7 +147,7 @@
                 .done(function(response) {
                   if(response == 1){
                     toastr.success("Success")
-                    url = '{ url("/accounting/ledger")}}';
+                    url = '{{ url("/accounting/journal")}}/';
                     window.location.replace(url);
                   }
 

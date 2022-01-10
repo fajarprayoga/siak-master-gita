@@ -145,7 +145,7 @@ class TransactionController extends Controller
 
 
             DB::commit();
-            return redirect()->back()->with('success', 'Success');
+            return redirect()->route('cashier.transaction.index')->with('success', 'Success');
         } catch (\Throwable $th) {
             DB::rollBack();
             dd($th);
@@ -231,7 +231,7 @@ class TransactionController extends Controller
         foreach ($type_expense as $key => $value) {
             $data[$key] = [
                 'vehicle_number' => $value,
-                'expense' => $key == 4 ? $sum : $request->expense[$key],
+                'expense' => $key == 4 ?( $sum  ? str_replace(".","",  $sum)  : 0 ) : ($request->expense[$key]  ? str_replace(".","",   $request->expense[$key])  : 0),
                 'created_at' => date('Y-m-d', strtotime($request->date))
             ];
         }
@@ -251,7 +251,7 @@ class TransactionController extends Controller
             $row->insert($data);
         }
 
-        return redirect()->back()->with('success', 'Success');
+        return redirect()->route('cashier.transaction.index')->with('success', 'Success');
     }
     public function edit($id)
     {
@@ -280,7 +280,7 @@ class TransactionController extends Controller
                 'vehicle' => $request->vehicle,
                 'type_material' => $request->type_material,
                 'material_id' => $request->material_id,
-                'price_material' => $request->price_material,
+                'price_material' =>  $request->price_material ? str_replace(".","",  $request->price_material)  : 0,
                 'nomor' => $request->nomor
             );
 
@@ -289,7 +289,7 @@ class TransactionController extends Controller
             if($request->gosek != null || $request->gosek != ''){
                 $expense = array(
                     'created_at' => $request->date ? date('Y-m-d', strtotime($request->date)) :  date('Y-m-d'),
-                    'expense' => $request->gosek,
+                    'expense' =>   $request->gosek  ? str_replace(".","",  $request->gosek)  : 0,
                     'transaction_id' => $transaction->id
                 );
 

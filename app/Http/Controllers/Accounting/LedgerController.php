@@ -127,7 +127,7 @@ class LedgerController extends Controller
             $ledger->ledger_detail()->createMany($ledger_detail_data);
 
             DB::commit();
-            return redirect()->back()->with('success', 'Success');
+            return redirect()->route('accounting.ledger.index')->with('success', 'Success');
         }catch(\Throwable $th){
             DB::rollBack();
             dd($th);

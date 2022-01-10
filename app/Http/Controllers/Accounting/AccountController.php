@@ -59,6 +59,7 @@ class AccountController extends Controller
     {
         $data = $request->all();
         Account::create($data);
+        return redirect()->route('accounting.accounts.index')->with('success', 'Success');
         // return redirect()->back()->with('success', 'Success');
     }
     /**
@@ -90,10 +91,10 @@ class AccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(AccountRequestUpdate $request, Account $account)
+    public function update(Request $request, Account $account)
     {
         $account->update($request->all());
-        return redirect()->back()->with('success', 'Success');
+        return redirect()->route('accounting.accounts.index')->with('success', 'Success');
     }
 
     /**

@@ -136,7 +136,7 @@ class IncomeStatementController extends Controller
             // $income_detail = Incomestatement_detail::create($income_table_detail);
             $income_table->incomestatement_detail()->createMany($income_table_detail);
             DB::commit();
-            return redirect()->back()->with('success', 'Success');
+            return redirect()->route('accounting.incomestatement.index')->with('success', 'Success');
         } catch (\Throwable $th) {
             DB::rollBack();
             dd($th);
