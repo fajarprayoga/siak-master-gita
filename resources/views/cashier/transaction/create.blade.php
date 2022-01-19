@@ -62,12 +62,12 @@
                                     <input class="form-control price" type="text" id="price_material" name="price_material" required >
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="nomor" class="form-label">@lang('global.transaction.nomor')</label>
-                                    <input class="form-control" type="text" id="nomor" name="nomor" required >
-                                </div>
-                            </div>
+                                    <label for="nomor" class="form-label">@lang('global.transaction.nomor')</label> --}}
+                                    <input class="form-control" type="hidden" id="nomor" name="nomor"  >
+                                {{-- </div>
+                            </div> --}}
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="gosek" class="form-label">@lang('global.transaction.gosek')</label>

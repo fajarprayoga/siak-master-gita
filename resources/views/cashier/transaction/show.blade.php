@@ -73,7 +73,13 @@
                 {data: 'gosek', name:'gosek'},
                 // // {data : 'details', name : 'details'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
-            ]
+            ],
+            fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+                    // console.log(aData);
+                if(aData['status'] == 1){
+                    $('td', nRow).css('background-color', 'red')
+                }
+            }
         });
 
     });

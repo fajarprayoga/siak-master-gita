@@ -40,12 +40,8 @@ class TransactionController extends Controller
                     ->addColumn('action', function($row){
                         $btn = '';
                         if(Auth::user()->can('isCashier')){
-                            if($row->status != 1){
-                                $btn = ' <a href="' .route('cashier.transaction.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
-                                $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
-                            }else{
-                                $btn.= '<span class="badge badge-danger" style="color:white">Terhapus</span>';
-                            }
+                            $btn = ' <a href="' .route('cashier.transaction.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
+                            $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
                         }
                         return $btn;
                     })
@@ -193,10 +189,9 @@ class TransactionController extends Controller
     public function show($date)
     {
         $daten = date('Y-m-d', strtotime($date));
-        $transactions = Transaction::where('created_at', $daten)->where('expense', 0)->where('status', '!=', 1)->orderBy('id', 'DESC')->get();
+        $transactions = Transaction::where('created_at', $daten)->where('expense', 0)->orderBy('id', 'DESC')->get();
 
         return view('cashier.transaction.show', compact('transactions', 'date'));
-        // dd($transactions);
     }
 
 
@@ -217,7 +212,7 @@ class TransactionController extends Controller
         $sum_gosek = 0;
         // pemilik rumusa
         // penjualan total - gosek * 25%
-        $t_transaction = Transaction::where('created_at',date('Y-m-d', strtotime($request->date)))->where('expense', 0)->where('status', '!=', 1)->get();
+        $t_transaction = Transaction::where('created_at',date('Y-m-d', strtotime($request->date)))->where('expense', 0)->get();
         $t_transaction = json_decode($t_transaction, true);
         $sum_transaction = array_sum(array_map(function($var) {
             return $var['price_material'];
@@ -365,9 +360,45 @@ class TransactionController extends Controller
         DB::beginTransaction();
         try{
             $transaction = Transaction::findOrFail($id);
-            $transaction->update([
-                'status' => 1
-            ]);
+            $date = $transaction->created_at;
+            $transaction->delete();
+            $t_transaction = Transaction::where('created_at', $date)->where('expense', 0)->get();
+            $t_transaction = json_decode($t_transaction, true);
+            $gosek = Gosek::where('transaction_id',$transaction->id)->first();
+
+            if (!is_null($gosek)) {
+                $gosek->delete();
+            }
+
+
+            $pemilik = Transaction::where('created_at',date('Y-m-d', strtotime($date)))->where('vehicle_number', 'pemilik' )->first();
+            $sum = 0;
+
+            if(!is_null($pemilik)){
+                $t_transaction = Transaction::where('created_at',date('Y-m-d', strtotime($date)))->where('expense', 0)->get();
+                $t_transaction = json_decode($t_transaction, true);
+                $sum_transaction = array_sum(array_map(function($var) {
+                    return $var['price_material'];
+                }, $t_transaction));
+
+                            // // get trasaksi gosek
+                $t_gosek = Gosek::where('created_at', date('Y-m-d', strtotime($date)))->get();
+                $t_gosek = json_decode($t_gosek, true);
+                if(!is_null(($t_gosek))){
+                    $sum_gosek = array_sum(array_map(function($var) {
+                        return $var['expense'];
+                    }, $t_gosek));
+
+                }
+
+                // dd($sum_gosek);
+
+                $sum = ($sum_transaction - $sum_gosek) *( 25/100);
+                $pemilik = Transaction::where('created_at',date('Y-m-d', strtotime($date)))->where('vehicle_number', 'pemilik' )
+                                ->update(['expense' => $sum]);
+
+                // dd($pemilik);
+            }
             DB::commit();
         } catch (\Throwable $th) {
             // dd($th);
@@ -381,7 +412,7 @@ class TransactionController extends Controller
     {
         // dd($request->all());
         $date = date('Y-m-d', strtotime($request->date));
-        $transactions = Transaction::where('created_at', $date)->where([['expense', '<=', 0], ['price_material', '!=', null], ['status','=' , 0]])->get();
+        $transactions = Transaction::where('created_at', $date)->where([['expense', '<=', 0], ['price_material', '!=', null]])->get();
         $transactions_expense = Transaction::where('created_at', $date)->where(function ($query){
             $query->where('price_material', '0');
             $query->orWhere('price_material', '=', null);

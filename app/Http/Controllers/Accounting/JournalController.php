@@ -38,9 +38,11 @@ class JournalController extends Controller
                     ->addColumn('action', function($row){
                         $btn='';
                         if(Auth::user()->can('isAccounting')){
-                            $btn = ' <a href="' .route('accounting.journal.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
+                            if($row->status !='approved'){
+                                $btn = ' <a href="' .route('accounting.journal.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
+                                $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
+                            }
                             // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';
-                            $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
                         }
                         if(!Auth::user()->can('isCashier')){
                             $btn .= ' <a href="' .route('accounting.journal.show', $row->id). '" class=" btn btn-info btn-sm my-1">View</a>';
@@ -92,7 +94,7 @@ class JournalController extends Controller
             $journal->journal_detail()->createMany($journal_details_data);
 
             DB::commit();
-            return redirect()->back()->with('success', 'Success');
+            return redirect()->route('accounting.journal.index')->with('success', 'Success');
         } catch (\Throwable $th) {
             DB::rollBack();
             dd($th);

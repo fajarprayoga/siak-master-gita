@@ -44,11 +44,12 @@ class LedgerController extends Controller
                         $btn='';
                         $btn .= ' <a href="' .route('accounting.ledger.report', $row->id). '" class=" btn btn-info btn-md my-1">View</a>';
                         if(Auth::user()->can('isAccounting')){
+
+                                $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class="btn btn-md btn-danger my-1">Delete</a>';
                             // $btn = ' <a href="' .route('accounting.ledger.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
                             // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';
-                            $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class="btn btn-md btn-danger my-1">Delete</a>';
                         }
-                        if(Auth::user()->can('isManager')){
+                        if(Auth::user()->can('isManager') && $row->status != 'approved'){
                             $btn.= ' <button class="btn btn-md btn-primary btn-approve mr-1" data-id = "'. $row->id .'" onclick="approve('.$row->id.')">Terima </button>';
                             $btn.= '<button class="btn btn-md btn-danger btn-reject" onclick="rejected('.$row->id.')" >Tolak</button>';
                         }

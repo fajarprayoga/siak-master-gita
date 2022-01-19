@@ -13,7 +13,8 @@ class Transaction extends Model
         'vehicle',
         'material_id',
         'price_material',
-        'nomor'
+        'nomor',
+        'status'
     ];
 
     public function material()

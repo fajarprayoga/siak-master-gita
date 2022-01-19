@@ -57,10 +57,11 @@
                         @endforeach
                     </tbody>
                 </table>
-                @can('isManager')
+
+                @if (Auth::user()->can('isManager') && $journal->status != 'approved')
                     <button class="btn btn-primary btn-approve">Terima</button>
                     <button class="btn btn-danger btn-reject">Tolak</button>
-                @endcan
+                @endif
             </div>
         </div>
     </div>

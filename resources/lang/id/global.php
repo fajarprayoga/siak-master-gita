@@ -71,7 +71,8 @@
             'other' => 'Lain - lain',
             'solar' => 'Solar',
             'price_expense' => 'Harga Pengeluaran',
-            'report' => 'Report'
+            'report' => 'Report',
+            'note' => 'Catatan'
         ],
         'material' => [
             'title' => 'Material',
