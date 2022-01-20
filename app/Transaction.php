@@ -14,7 +14,8 @@ class Transaction extends Model
         'material_id',
         'price_material',
         'nomor',
-        'status'
+        'status',
+        'is_delete'
     ];
 
     public function material()

@@ -261,7 +261,7 @@
                             <input type="text" placeholder = "0" name="amount[]" disabled  min="0" id="" class="form-control amount" >
                         </td>
                         <td>
-                            <textarea name="description_journal_detail[]" class="form-control" id="" cols="30" rows="1"></textarea>
+                            <textarea name="description_journal_detail[]" class="form-control" id="" cols="30" rows="1" required></textarea>
                         </td>
                         <td>
                             <div class="btn btn-danger delete text-center p-3" >

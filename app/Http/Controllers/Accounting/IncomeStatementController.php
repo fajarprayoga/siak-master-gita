@@ -36,7 +36,9 @@ class IncomeStatementController extends Controller
                     ->addColumn('action', function($row){
                         $btn='';
                         if(Auth::user()->can('isAccounting')){
-                            $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-md my-1">Delete</a>';
+                            if($row->status != 'approved'){
+                                $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-md my-1">Delete</a>';
+                            }
                             // $btn = ' <a href="' .route('accounting.incomestatement.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
                             // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';
                         }

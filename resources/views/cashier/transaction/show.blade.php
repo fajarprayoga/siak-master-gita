@@ -77,7 +77,7 @@
             fnRowCallback: function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
                     // console.log(aData);
                 if(aData['status'] == 1){
-                    $('td', nRow).css('background-color', 'red')
+                    $('td', nRow).css('background-color', '#f8f9fa')
                 }
             }
         });
@@ -112,6 +112,8 @@
                                 icon: "success",
                             });
                             $('.data-table').DataTable().ajax.reload();
+                            url = '{{ url("/cashier/transaction")}}';
+                            window.location.replace(url);
                         },
                         error: function(err) {
                             console.log(err);

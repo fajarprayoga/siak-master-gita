@@ -35,7 +35,9 @@ class TrialBalanceController extends Controller
                         $btn='';
                         $btn .= ' <a href="' .route('accounting.trialbalance.report', $row->id). '" class=" btn btn-info btn-md my-1">View</a>';
                         if(Auth::user()->can('isAccounting')){
-                                $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-md my-1">Delete</a>';
+                                if($row->status != 'approved'){
+                                    $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-md my-1">Delete</a>';
+                                }
 
                             // $btn = ' <a href="' .route('accounting.ledger.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
                             // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';

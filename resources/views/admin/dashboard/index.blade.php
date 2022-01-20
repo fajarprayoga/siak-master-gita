@@ -44,7 +44,7 @@
                                                 <td> {{$item->material->name}} </td>
                                                 <td> {{Rupiah($item->price_material)}} </td>
                                                 <td> {{$item->nomor }} </td>
-                                                <td> {{Rupiah($item->gosek->expense)}} </td>
+                                                <td> {{$item->gosek !=null ? Rupiah($item->gosek->expense) : 0}} </td>
                                             </tr>
                                         @endforeach
                                     </tbody>

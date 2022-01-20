@@ -40,7 +40,7 @@ class TransactionController extends Controller
                     ->addColumn('action', function($row){
                         $btn = '';
                         if(Auth::user()->can('isCashier')){
-                            if($row->status != 1){
+                            if($row->is_delete != 1){
                                 $btn = ' <a href="' .route('cashier.transaction.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
                                 $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class=" btn btn-danger btn-sm my-1">Delete</a>';
                             }else{
@@ -64,7 +64,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::orderBy('created_at', 'DESC')->get()->groupBy(function($data) {
+        $transactions = Transaction::where([['price_material', '!=', null ], ['is_delete', '=', '0']])->orderBy('created_at', 'DESC')->get()->groupBy(function($data) {
             return $data->created_at->format('d-m-Y');
         });;
         return view('cashier.transaction.index', compact('transactions'));
@@ -80,7 +80,7 @@ class TransactionController extends Controller
 
     public function create(Request $request)
     {
-        $materials = Material::all();
+        $materials = Material::where('is_delete', 0)->get();
         $date=$request->date;
         return view('cashier.transaction.create', compact('date', 'materials'));
     }
@@ -366,7 +366,7 @@ class TransactionController extends Controller
         try{
             $transaction = Transaction::findOrFail($id);
             $transaction->update([
-                'status' => 1
+                'is_delete' => 1
             ]);
             DB::commit();
         } catch (\Throwable $th) {

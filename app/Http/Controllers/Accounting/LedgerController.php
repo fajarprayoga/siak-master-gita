@@ -44,8 +44,9 @@ class LedgerController extends Controller
                         $btn='';
                         $btn .= ' <a href="' .route('accounting.ledger.report', $row->id). '" class=" btn btn-info btn-md my-1">View</a>';
                         if(Auth::user()->can('isAccounting')){
-
-                                $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class="btn btn-md btn-danger my-1">Delete</a>';
+                                if($row->status != 'approved'){
+                                    $btn .= ' <a href="javascript:void(0)" id="delete" onClick="removeItem(' .$row->id. ')" class="btn btn-md btn-danger my-1">Delete</a>';
+                                }
                             // $btn = ' <a href="' .route('accounting.ledger.edit', $row->id). '" class=" btn btn-primary btn-sm my-1">Edit</a>';
                             // $btn .= '<a href="javascript:void(0)" class=" btn btn-primary btn-sm my-1">View</a>';
                         }
@@ -111,10 +112,10 @@ class LedgerController extends Controller
             $ledger = Ledger::create($request->all());
 
             $ledger_detail_data=[];
-
+            (new DateTime($journal_details[$i]->created_at))->format('Y-m-d');
             for ($i = 0; $i < count($journal_details); $i++) {
                 $ledger_detail_data[$i] =[
-                    'date' => date('Y-m-d', strtotime($journal_details[$i]->created_at)),
+                    'date' =>    (new DateTime($journal_details[$i]->created_at))->format('Y-m-d'),
                     'ledger_id' => $ledger->id,
                     'account_id' => $journal_details[$i]->account_id,
                     'types' => $journal_details[$i]->types,
