@@ -5,8 +5,47 @@
         .select2 {
             width: 200px
         }
+        .loader{
+            /* position: fixed; */
+            height: 100%;
+            width: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            transition: all 0.5s;
+            z-index: 1000;
+        }
+            .loader .ring{
+            height: 45px;
+            width: 45px;
+            border: 5px solid #ddd;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+            .loader .ring:after{
+            position: absolute;
+            content: "";
+            height: 100%;
+            width: 100%;
+            border-radius: 50%;
+            border: 5px solid #ff3d00;
+            border-top-color: transparent;
+            animation: rotate 1.5s linear infinite;
+        }
+            @keyframes rotate {
+            100%{
+                transform: rotate(360deg);
+            }
+        }
     </style>
-    <div class="row">
+    <div class="loader">
+        <div class="ring"></div>
+    </div>
+    <div class="row base-content">
         <div class="col-xl-12 mx-auto">
             <h6 class="mb-0 text-uppercase">@lang('global.journal.title')</h6>
             <hr>
@@ -40,10 +79,10 @@
                             <tbody id="baseRow">
                                     <tr class="tr">
                                         <td>
-                                            <select name="accounts[]" class=" select2 accounts" required>
+                                            <select name="accounts[]" class=" select2 accounts"  required>
                                                 <option value="">-- pilih --</option>
                                                 @foreach ($accounts as $account )
-                                                    <option value="{{ $account->id }}">{{ "$account->code $account->name" }}</option>
+                                                    <option data-code="{{$account->code}}" value="{{ $account->id }}">{{ "$account->code $account->name" }}</option>
                                                 @endforeach
                                             </select>
                                         </td>
@@ -70,7 +109,7 @@
                                             <select name="accounts[]" class=" select2 accounts" required>
                                                 <option value="">-- pilih --</option>
                                                 @foreach ($accounts as $account )
-                                                    <option value="{{ $account->id }}">{{ "$account->code $account->name" }}</option>
+                                                    <option data-code="{{$account->code}}" value="{{ $account->id }}">{{ "$account->code $account->name" }}</option>
                                                 @endforeach
                                             </select>
                                         </td>
@@ -217,48 +256,51 @@
 
 
         function addRow() {
-            // count++;
-                // e.preventDefault();
-                $('#baseRow').append(`
-                    <tr class='tr' >
-                        <td>
-                            <select  name="accounts[]" class=" select2 accounts" required>
-                                <option value="">-- choose account --</option>
-                                @foreach ($accounts as $account )
-                                    <option value="{{ $account->id }}">{{ "$account->code $account->name" }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <select  name="types[]" class=" select2 types" onChange="funTypes()" required>
-                                <option value="">-- pilih --</option>
-                                <option value="debit">
-                                    Debit
-                                </option>
-                                <option value="credit" >
-                                    Credit
-                                </option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="text" name="amount[]" disabled  min="0" id="" class="form-control amount" required>
-                        </td>
-                        <td>
-                            <textarea name="description_journal_detail[]" class="form-control" id="" cols="30" rows="1" required></textarea>
-                        </td>
-                        <td>
-                            <div class="btn btn-danger delete text-center p-3" >
-                                <div class='d-flex align-items-center'>
-                                    <i class="lni lni-trash"></i>
+
+                if($('#date').val()){
+                    $('#baseRow').append(`
+                        <tr class='tr' >
+                            <td>
+                                <select  name="accounts[]" class=" select2 accounts" required>
+                                    <option value="">-- choose account --</option>
+                                    @foreach ($accounts as $account )
+                                        <option data-code="{{$account->code}}" value="{{ $account->id }}">{{ "$account->code $account->name" }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <select  name="types[]" class=" select2 types" onChange="funTypes()" required>
+                                    <option value="">-- pilih --</option>
+                                    <option value="debit">
+                                        Debit
+                                    </option>
+                                    <option value="credit" >
+                                        Credit
+                                    </option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="amount[]" disabled  min="0" id="" class="form-control amount" required>
+                            </td>
+                            <td>
+                                <textarea name="description_journal_detail[]" class="form-control" id="" cols="30" rows="1" required></textarea>
+                            </td>
+                            <td>
+                                <div class="btn btn-danger delete text-center p-3" >
+                                    <div class='d-flex align-items-center'>
+                                        <i class="lni lni-trash"></i>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                `)
-                $('.select2').select2({
-                    placeholder: "Pilih"
-                })
-                // console.log(row.outerHTML);
+                            </td>
+                        </tr>
+                    `)
+                    $('.select2').select2({
+                        placeholder: "Pilih"
+                    })
+                }else{
+                    $.alert("Pilih Tanngal Dahulu");
+                }
+
             }
             $(document).on('click', '.delete', function() {
                 $(this).closest('.tr').remove();
@@ -266,5 +308,139 @@
             })
 
             $('#date').bootstrapMaterialDatePicker({ format : 'DD-MM-YYYY',time:false });
+
+            var expense = [];
+            //loader
+            // select date
+            $('#date').on('change', () => {
+                $('.accounts').val('').change()
+                $('.base-content').css("display", "none");
+                date = $('#date').val();
+                if(date){
+                    loaderFun(true)
+                    _token = $('input[name=_token]').val();
+                    urlsnya = '{{ url("/accounting/journalexpense")}}/' + date;
+                    $.ajax({
+                        type: 'GET',
+                        dataType: 'json',
+                        // data: {_token:_token, date:date},
+                        url: urlsnya,
+                    })
+                    .done(function(response) {
+                       expense = response;
+                    })
+                    .fail(function(){
+                        $.alert("Network Error");
+                        return;
+                    })
+                    .always(function() {
+                        console.log("complete");
+                        loaderFun(false)
+                        $('.base-content').css("display", "flex");
+                    });
+                    $('.amount').val(0)
+                    // },
+                    //     No: function () {
+                    //     return;
+                    // }
+                }else{
+                    $.alert("error");
+
+                }
+            })
+
+            $('body').on('change','.accounts', function (e) {
+                // alert($(this).val())
+                // date = $('#date').val();
+                if( $('#date').val()){
+                    var code = $(this).children('option:selected').data('code');
+                    var row = $($(this)).closest('.tr')
+                    var amount = $(row).find('.amount')
+
+                    if(code == 5100){
+                        // amount.val()
+                        expense.forEach(element => {
+                            // console.log(element['vehicle_number']);
+                            if(element['vehicle_number'] == 'operator'){
+                                amount.val(
+                                    String(element['expense'].replace(/\D/g, "")
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                                ) )
+                                amount.removeAttr('disabled');
+                            }
+                        });
+1                    }else  if(code == 5117){
+                        // amount.val()
+                        expense.forEach(element => {
+                            // console.log(element['vehicle_number']);
+                            if(element['vehicle_number'] == 'helper'){
+                                amount.val(
+                                    String(element['expense'].replace(/\D/g, "")
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                                ) )
+                                amount.removeAttr('disabled');
+                            }
+                        });
+1                    }else if(code == 5119){
+                        // amount.val()
+                        expense.forEach(element => {
+                            // console.log(element['vehicle_number']);
+                            if(element['vehicle_number'] == 'jalan desa'){
+                                amount.val(
+                                    String(element['expense'].replace(/\D/g, "")
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                                ) )
+                                amount.removeAttr('disabled');
+                            }
+                        });
+1                    }else if(code == 5101){
+                        // amount.val()
+                        expense.forEach(element => {
+                            // console.log(element['vehicle_number']);
+                            if(element['vehicle_number'] == 'solar'){
+                                amount.val(
+                                    String(element['expense'].replace(/\D/g, "")
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                                ) )
+                                amount.removeAttr('disabled');
+                            }
+                        });
+1                    }else if(code == 5120){
+                        // amount.val()
+                        expense.forEach(element => {
+                            // console.log(element['vehicle_number']);
+                            if(element['vehicle_number'] == 'kasir'){
+                                amount.val(
+                                    String(element['expense'].replace(/\D/g, "")
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                                ) )
+                                amount.removeAttr('disabled');
+                            }
+                        });
+1                    }else if(code == 5102){
+                        // amount.val()
+                        expense.forEach(element => {
+                            // console.log(element['vehicle_number']);
+                            if(element['vehicle_number'] == 'pemilik'){
+                                amount.val(
+                                    String(element['expense'].replace(/\D/g, "")
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                                ) )
+                                amount.removeAttr('disabled');
+                            }
+                        });
+1                    }
+                }else{
+                    $.alert("Pilih Tanngal Dahulu");
+                    $('.accounts').val('')
+                }
+
+            });
+
+        function loaderFun(value = false){
+            const loader = document.querySelector(".loader");
+                value == false ?  loader.style.opacity = "0" : loader.style.display = 'flex';
+                value == false ?  loader.style.height = 0 : loader.style.height = '100vh';
+            }
     </script>
 @endsection

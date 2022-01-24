@@ -31,7 +31,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
 // accounting
 Route::group(['prefix' => 'accounting', 'as' => 'accounting.', 'namespace' => 'Accounting', 'middleware' => ['auth']], function () {
-    Route::get('/', 'DashboardController@index')->name('dashboard');
+    // Route::get('/', 'DashboardController@index')->name('dashboard');
     // accounts
     Route::resource('accounts', 'AccountController');
     Route::get('/accountdata', 'AccountController@accountdata')->name('accounts.accountdata');
@@ -40,7 +40,7 @@ Route::group(['prefix' => 'accounting', 'as' => 'accounting.', 'namespace' => 'A
     Route::get('/journaldata', 'JournalController@journaldata')->name('journal.journaldata');
     Route::delete('/detail/delete/{id}', 'JournalController@deleteItemDetail')->name('journal.deleteItemDetail');
     Route::get('journal/report/{id}','JournalController@report')->name('journal.report');
-
+    Route::get('/journalexpense/{date}', 'JournalController@expense')->name('journal.expense');
     // Buku Besar (Ledger)
 
     Route::resource('ledger', 'LedgerController');

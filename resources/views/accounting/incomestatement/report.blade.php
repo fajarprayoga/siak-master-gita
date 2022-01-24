@@ -28,7 +28,7 @@
                @if ($detail->type == 'income')
                <tr>
                     <td>{{$detail->name}}</td>
-                    <td>{{Rupiah($detail->amount)}}</td>
+                    <td>{{Rupiah(str_replace("-","",  $detail->amount))}} </td>
                     <td></td>
                     <td style="width: 3px"></td>
                 </tr>
@@ -37,7 +37,7 @@
             <tr>
                 <td class="text-center " style="font-weight: bold">Total Penjualan</td>
                 <td></td>
-                <td class="text-center" style="font-weight: bold"> {{Rupiah($total->amount_total)}} </td>
+                <td class="text-center" style="font-weight: bold">{{Rupiah(str_replace("-","",  $total->amount_total))}} </td>
                 <td style="width: 3px"></td>
             </tr>
             <tr>
@@ -63,9 +63,10 @@
                 <td style="width: 3px; font-size: 10px; font-weight: bold">-</td>
             </tr>
             <?php
-                if($total->amount_total > $total->expense_total){
+                // $total_amount = (int)(str_replace("-","",  $total->amount_total)
+                if((int)(str_replace("-","",  $total->amount_total) > $total->expense_total)){
                     $text = 'LABA';
-                }else if($total->amount_total < $total->expense_total){
+                }else if((int)(str_replace("-","",  $total->amount_total) < $total->expense_total)){
                     $text ="RUGI";
                 }else{
                     $text = '';
@@ -74,7 +75,7 @@
             <tr>
                 <td class="text-center " style="font-weight: bold; font-size: 15px">{{$text}} </td>
                 <td></td>
-                <td class="text-center" style="font-weight: bold"> {{Rupiah($total->amount_total - $total->expense_total)}} </td>
+                <td class="text-center" style="font-weight: bold"> {{Rupiah((int)(str_replace("-","",  $total->amount_total) - $total->expense_total))  }} </td>
                 <td style="width: 3px"></td>
             </tr>
 		</tbody>

@@ -9,6 +9,7 @@ use App\Journal;
 use App\JournalDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\JournalRequestCreate;
+use App\Transaction;
 use DataTables;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
@@ -224,5 +225,13 @@ class JournalController extends Controller
         // return view('accounting.journal.show', compact('journal'));
         $pdf = PDF::loadview('accounting.journal.report', ['journal' => $journal]);
         return $pdf->stream();
+    }
+
+    public function expense($date)
+    {
+        $daten = date('Y-m-d', strtotime($date));
+        $expenses = Transaction::where('created_at', $daten)->where('expense', '!=', 0)->get();
+
+        return json_decode($expenses);
     }
 }

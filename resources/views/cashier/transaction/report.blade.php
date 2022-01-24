@@ -22,7 +22,7 @@
         {{date('d M     Y', strtotime($date))}}
     </div>
 
-    <h4>Transaksi</h4>
+    <h4>Debet</h4>
 	<table class='table table-bordered'>
 		<thead>
 			<tr>
@@ -57,7 +57,7 @@
 		</tbody>
 	</table>
 
-    <h4>Pengeluaran</h4>
+    <h4>Kredit</h4>
 
     {{-- Pengeluaran --}}
     <table class='table table-bordered'>
@@ -104,17 +104,17 @@
     <table>
         <tbody>
             <tr>
-                <td class="transaksi-total">Total Transaksi</td>
+                <td class="transaksi-total">Total Debet</td>
                 <td class="transaksi-total"> : </td>
                 <td class="transaksi-total">{{Rupiah($total)}}</td>
             </tr>
             <tr>
-                <td class="transaksi-total">Total Pengeluaran</td>
+                <td class="transaksi-total">Total Kredit</td>
                 <td class="transaksi-total"> : </td>
                 <td class="transaksi-total">{{Rupiah($total_expense)}}</td>
             </tr>
             <tr>
-                <td class="transaksi-total">Total </td>
+                <td class="transaksi-total">Saldo </td>
                 <td class="transaksi-total"> : </td>
                 <td class="transaksi-total">{{Rupiah ($total - $total_expense)}}</td>
             </tr>

@@ -66,7 +66,7 @@ class TransactionController extends Controller
     {
         $transactions = Transaction::where([['price_material', '!=', null ], ['is_delete', '=', '0']])->orderBy('created_at', 'DESC')->get()->groupBy(function($data) {
             return $data->created_at->format('d-m-Y');
-        });;
+        });
         return view('cashier.transaction.index', compact('transactions'));
         // dd($transaction);
 
